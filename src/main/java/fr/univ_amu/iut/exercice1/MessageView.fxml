@@ -18,7 +18,7 @@
       style="-fx-padding: 20; -fx-min-width: 360;">
 
   <Label text="Saisissez un message :" />
-  <TextField fx:id="champTexte" promptText="Tapez ici..." />
+  <TextField fx:id="champTexte" promptText="Votre message" />
 
   <Label fx:id="labelApercu"
          maxWidth="Infinity"
