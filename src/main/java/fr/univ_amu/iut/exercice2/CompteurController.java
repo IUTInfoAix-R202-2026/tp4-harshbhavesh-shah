@@ -21,9 +21,7 @@ public class CompteurController {
   }
 
   @FXML
-  private void initialize() {
-    // TODO exercice 2 : lier le texte du label au message du ViewModel.
-  }
+  private void initialize() {}
 
   @FXML
   private void surIncrementer() {
