@@ -39,9 +39,7 @@ public class CompteurViewModel {
 
   // ----- Commandes (pattern Command) -----
 
-  public void incrementerCommand() {
-    // TODO exercice 2 : déléguer au modèle.
-  }
+  public void incrementerCommand() {}
 
   public void decrementerCommand() {
     // TODO exercice 2 : déléguer au modèle.
