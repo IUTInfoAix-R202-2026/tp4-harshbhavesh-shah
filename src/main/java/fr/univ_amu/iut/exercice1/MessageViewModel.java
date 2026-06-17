@@ -32,15 +32,9 @@ public class MessageViewModel {
   public MessageViewModel(Message message) {
     this.message = message;
 
-    this.texte.set(message.getTexte());
-    this.texte.addListener(
-        (observable, oldTexte, newTexte) -> {
-          message.setTexte(newTexte);
-        });
-
-    this.apercu.bind(Bindings.concat("Aperçu : ", texte));
-    // TODO exercice 1 : câbler le ViewModel.
-    //
+    texte.set(message.getTexte());
+    texte.addListener((obs, oldValue, newValue) -> this.message.setTexte(texte.get()));
+    apercu.bind(Bindings.concat("Aperçu : ", texte));
     // 1. Initialiser la propriété `texte` avec la valeur actuelle du modèle
     // (message.getTexte()).
     // 2. Quand `texte` change, recopier la nouvelle valeur dans le modèle
