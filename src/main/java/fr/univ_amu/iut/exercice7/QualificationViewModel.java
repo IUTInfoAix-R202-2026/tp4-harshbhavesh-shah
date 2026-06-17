@@ -3,6 +3,7 @@ package fr.univ_amu.iut.exercice7;
 import com.google.inject.Inject;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyStringProperty;
@@ -43,16 +44,32 @@ public class QualificationViewModel {
   public QualificationViewModel(ServiceNuits service) {
     this.nuit = service.chargerNuit();
 
-    // TODO exercice 7 : lier les deux libellés dérivés.
-    //
+    descriptionSelection.bind(
+        Bindings.createStringBinding(
+            () -> {
+              if (sequenceSelectionnee.isNull().get())
+                return "(sélectionnez une séquence dans le tableau)";
+              else
+                return String.format(
+                    "Séquence %s - %.1f kHz",
+                    sequenceSelectionnee.getValue().getHorodatage().format(HEURE),
+                    sequenceSelectionnee.getValue().getFrequenceDominanteKHz());
+            },
+            sequenceSelectionnee));
+
+    verdictGlobalLibelle.bind(
+        Bindings.when(nuit.verdictGlobalProperty().isEmpty())
+            .then("Verdict global : (à saisir)")
+            .otherwise(Bindings.concat("Verdict global : ", nuit.verdictGlobalProperty())));
     // 1. descriptionSelection :
-    //    - si aucune séquence n'est sélectionnée -> "(sélectionnez une séquence dans le tableau)"
-    //    - sinon -> "Séquence HH:mm - XX.X kHz" (heure puis fréquence à 1 décimale)
-    //    Astuce : Bindings.createStringBinding(() -> {...}, sequenceSelectionnee).
+    // - si aucune séquence n'est sélectionnée -> "(sélectionnez une séquence dans
+    // le tableau)"
+    // - sinon -> "Séquence HH:mm - XX.X kHz" (heure puis fréquence à 1 décimale)
+    // Astuce : Bindings.createStringBinding(() -> {...}, sequenceSelectionnee).
     //
     // 2. verdictGlobalLibelle : "Verdict global : (à saisir)" tant que le verdict
-    //    du modèle est vide, sinon "Verdict global : <verdict>".
-    //    Astuce : dépend de nuit.verdictGlobalProperty().
+    // du modèle est vide, sinon "Verdict global : <verdict>".
+    // Astuce : dépend de nuit.verdictGlobalProperty().
   }
 
   public ObservableList<Sequence> sequencesProperty() {
@@ -90,11 +107,13 @@ public class QualificationViewModel {
 
   /** Marque la séquence sélectionnée comme "Écoutée". */
   public void ecouterCommand() {
-    // TODO exercice 7 : si une séquence est sélectionnée, passer son statut à "Écoutée".
+    if (sequenceSelectionnee.isNotNull().get()) sequenceSelectionnee.get().setStatut("Écoutée");
+    // si une séquence est sélectionnée, passer son statut à "Écoutée".
   }
 
   /** Enregistre le verdict saisi dans le modèle de la nuit. */
   public void enregistrerVerdictCommand() {
-    // TODO exercice 7 : recopier le verdict saisi dans le modèle (nuit.setVerdictGlobal).
+    nuit.setVerdictGlobal(verdictSaisi.getValue());
+    // recopier le verdict saisi dans le modèle (nuit.setVerdictGlobal).
   }
 }
